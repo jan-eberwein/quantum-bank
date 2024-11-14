@@ -3,18 +3,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import UserProfileCard from './UserProfileCard';
 
 const Sidebar = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Dashboard', href: '/' },
     { name: 'Transactions', href: '/transactions' },
     { name: 'Account Settings', href: '/account/settings' },
   ];
 
   return (
-    <nav className="h-full w-1/4 bg-gray-100 p-4">
+    <nav className="h-full w-1/3 bg-gray-100 p-4">
       <h2 className="text-2xl font-bold mb-4">Quantum</h2>
       <ul>
         {navItems.map((item) => (
@@ -30,6 +31,20 @@ const Sidebar = () => {
           </li>
         ))}
       </ul>
+
+      <hr className="my-4" />
+      <div className="mt-4 bg-gray-200 p-4">
+        <h4>Copilot Kit</h4>
+      </div>
+
+      <hr className="my-4" />
+
+      <UserProfileCard
+        name="John Doe"
+        email="john.doe@gmail.com"
+        profileImage="https://loremflickr.com/200/200?random=1"
+      />
+
     </nav>
   );
 };

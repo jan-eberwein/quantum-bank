@@ -1,6 +1,12 @@
-/* client/styles/globals.css */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-2xl;
   }
-  
+  h2 {
+    @apply text-xl;
+  }
+}
