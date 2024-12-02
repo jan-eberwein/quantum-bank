@@ -1,20 +1,24 @@
 // client/app/layout.tsx
-import { ReactNode } from 'react';
-import Sidebar from '../components/Layout/Sidebar';
-import '../styles/globals.css'; // Import global styles
+import { ReactNode } from "react";
+import Sidebar from "../components/Layout/Sidebar";
+import "../styles/globals.css"; // Import global styles
+import { UserProvider } from "../components/Layout/UserContext";
+import { CopilotKit } from "@copilotkit/react-core";
 
-interface RootLayoutProps {
-  children: ReactNode;
-}
-
-const RootLayout = ({ children }: RootLayoutProps) => {
+const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
       <body>
-        <div className="flex h-screen">
-          <Sidebar />
-          <main className="flex-1 p-4">{children}</main>
-        </div>
+        <UserProvider>
+          <div className="flex h-screen">
+            <Sidebar />
+            <main className="flex-1 p-4">
+              <CopilotKit runtimeUrl="/api/copilotkit">
+                {children}
+              </CopilotKit>
+            </main>
+          </div>
+        </UserProvider>
       </body>
     </html>
   );

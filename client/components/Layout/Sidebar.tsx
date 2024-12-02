@@ -38,13 +38,7 @@ const Sidebar = () => {
       </div>
 
       <hr className="my-4" />
-
-      <UserProfileCard
-        name="John Doe"
-        email="john.doe@gmail.com"
-        profileImage="https://loremflickr.com/200/200?random=1"
-      />
-
+      <UserProfileCard />
     </nav>
   );
 };

@@ -1,9 +1,14 @@
 import Image from "next/image";
 
-export default function Dashboard() {
+const Dashboard = () => {
+  const name = 'Jan';
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome, {name}!</p>
+      </div>
   );
 }
+
+export default Dashboard;
