@@ -1,16 +1,16 @@
-// client/middleware.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const token = req.cookies.get("token")?.value;
+  const token = req.cookies.get("token")?.value;
 
-    if (!token) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+  if (!token && req.nextUrl.pathname !== "/login" && req.nextUrl.pathname !== "/register") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-    return NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/dashboard", "/transactions", "/account/:path*"], // geschützte Routen
+  matcher: ["/dashboard/:path*", "/transactions/:path*", "/account/:path*"],
 };
