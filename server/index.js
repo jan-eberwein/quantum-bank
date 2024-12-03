@@ -2,7 +2,10 @@ const express = require('express');
 const { db } = require('./db/connection');
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
+const transactionCategoryRoutes = require('./routes/transactionCategoryRoutes');
+const transactionStatusesRoutes = require('./routes/transactionStatusesRoutes');
+const accountRoutes = require('./routes/accountRoutes');
+const userRoutes = require('./routes/userRoutes');
 const { authenticateToken } = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -14,7 +17,10 @@ app.use(express.json()); // Built-in Express method to parse JSON
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', authenticateToken, transactionRoutes);
-app.use('/api/categories', authenticateToken, categoryRoutes);
+app.use('/api/transaction-categories', authenticateToken, transactionCategoryRoutes);
+app.use('/api/transaction-statuses', authenticateToken, transactionStatusesRoutes);
+app.use('/api/accounts', authenticateToken, accountRoutes);
+app.use('/api/users', authenticateToken, userRoutes);
 
 // Health Check Route
 app.get('/', (req, res) => {

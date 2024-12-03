@@ -1,6 +1,6 @@
 const { db } = require('../db/connection');
 
-exports.getAllCategories = (req, res) => {
+exports.getAllTransactionCategories = (req, res) => {
     const query = `SELECT category_id, category_name FROM Transaction_Categories`;
 
     db.all(query, [], (err, rows) => {

@@ -1,9 +1,9 @@
 const express = require('express');
-const { getAllCategories } = require('../controllers/categoryController');
+const { getAllTransactionCategories } = require('../controllers/transactionCategoryController');
 
 const router = express.Router();
 
 // Endpoint to get all transaction categories
-router.get('/', getAllCategories);
+router.get('/', getAllTransactionCategories);
 
 module.exports = router;
