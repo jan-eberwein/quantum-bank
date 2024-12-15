@@ -16,7 +16,7 @@ const DoughnutChart = () => {
     ],
     labels: ['Checking', 'Savings', 'Investments']
   }
- 
+
   const options = {
     cutout: "60%",
     plugins: {
