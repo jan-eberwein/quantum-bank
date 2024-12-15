@@ -21,7 +21,6 @@ const Home = () => {
             balance={'10000.00'}
           />
 
-
           <p>AI-powered banking application</p>
         </header>
       </div>
