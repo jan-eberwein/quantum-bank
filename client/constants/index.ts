@@ -10,6 +10,11 @@ export const sidebarLinks = [
     label: "Transactions",
   },
   {
+    imgURL: "/icons/transaction.svg",
+    route: "/transactionsApi",
+    label: "Transactions (API)",
+  },
+  {
     imgURL: "/icons/user.svg",
     route: "/account",
     label: "Account Settings",

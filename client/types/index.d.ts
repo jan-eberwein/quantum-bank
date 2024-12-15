@@ -74,6 +74,18 @@ declare type Transaction = {
   $createdAt: string;
 };
 
+declare type TransactionApi = {
+  transaction_id: number; // Unique ID of the transaction
+  sender_account_id: number; // Sender's account ID
+  recipient_account_id: number; // Recipient's account ID
+  amount: number; // Transaction amount
+  description: string; // Description or name of the transaction
+  transaction_date: string; // Date of the transaction (ISO format)
+  category_name?: string; // Category of the transaction (optional)
+  status_name?: string; // Status of the transaction (optional)
+};
+
+
 declare type Bank = {
   $id: string;
   accountId: string;
@@ -317,3 +329,12 @@ declare interface getBankProps {
 declare interface getBankByAccountIdProps {
   accountId: string;
 }
+
+// Define the type for the user response
+declare type UserApi = {
+  user_id: number;
+  username: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+};

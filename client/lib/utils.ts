@@ -200,3 +200,20 @@ export const authFormSchema = (type: string) => z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
+
+export const mapTransactionApiToTransaction = (
+    transaction: TransactionApi,
+    accountId: number
+): Transaction => ({
+  $id: transaction.transaction_id.toString(),
+  name: transaction.description,
+  accountId: transaction.sender_account_id.toString(),
+  amount:
+      accountId === transaction.recipient_account_id
+          ? Math.abs(transaction.amount) // Positive if received
+          : -Math.abs(transaction.amount), // Negative if sent
+  pending: transaction.status_name === "Pending", // Map "Pending" status
+  category: transaction.category_name || "Uncategorized",
+  date: new Date(transaction.transaction_date).toISOString(),
+  $createdAt: new Date(transaction.transaction_date).toISOString(),
+});
