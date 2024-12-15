@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); // Import CORS middleware
 const { db } = require('./db/connection');
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
@@ -13,6 +14,15 @@ const port = 3001;
 
 // Middleware
 app.use(express.json()); // Built-in Express method to parse JSON
+
+// CORS Configuration
+const corsOptions = {
+    origin: 'http://localhost:3000', // Allow requests from localhost:3000
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+};
+
+app.use(cors(corsOptions)); // Use CORS middleware with options
 
 // Routes
 app.use('/api/auth', authRoutes);
