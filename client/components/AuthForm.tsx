@@ -1,26 +1,27 @@
 'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
-import React, { useState } from 'react'
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Updated import
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Mock User Data (vorher definieren)
 const MOCK_USERS = [
-  { email: 'jan@example.com', password: 'password', name: 'Jan Eberwein' },
-  { email: 'johannes@example.com', password: 'password', name: 'Johannes Eder' },
-  { email: 'johnny@example.com', password: 'password', name: 'Johnny Eder' }
+  { email: 'jan@quantum.com', password: 'password', name: 'Jan Eberwein' },
+  { email: 'johannes@quantum.com', password: 'password', name: 'Johannes Eder' },
+  { email: 'johnny@quantum.com', password: 'password', name: 'Johnny Eder' },
 ];
 
 const AuthForm = ({ type }: { type: string }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter(); // Initialize the router
 
   const validateEmail = (email: string) => {
-    // Sehr einfache Email-Validierung
     return email.includes('@') && email.includes('.');
   };
 
@@ -29,12 +30,11 @@ const AuthForm = ({ type }: { type: string }) => {
     setError('');
 
     if (type === 'sign-up') {
-      // Sehr basic Registrierungs-Validierung
       if (!email) {
         setError('Email ist erforderlich');
         return;
       }
-      
+
       if (!validateEmail(email)) {
         setError('Ungültige Email-Adresse');
         return;
@@ -45,20 +45,14 @@ const AuthForm = ({ type }: { type: string }) => {
         return;
       }
 
-      // Bei erfolgreicher Validierung würde hier die Registrierung erfolgen
       alert('Registrierung erfolgreich!');
-
     } else if (type === 'sign-in') {
-      // Sehr einfache Login-Logik mit Mock-Daten
-      const userMatch = MOCK_USERS.find(user => 
-        (user.email.toLowerCase().includes('jan') || 
-         user.email.toLowerCase().includes('johannes') || 
-         user.email.toLowerCase().includes('johnny')) &&
-        user.email === email
+      const userMatch = MOCK_USERS.find(
+        (user) => user.email === email && user.password === password
       );
 
       if (userMatch) {
-        alert(`Willkommen, ${userMatch.name}!`);
+        router.push('/'); // Redirect to root page
       } else {
         setError('Login fehlgeschlagen.');
       }
@@ -67,9 +61,9 @@ const AuthForm = ({ type }: { type: string }) => {
 
   return (
     <section className="auth-form">
-      <header className='flex flex-col gap-5 md:gap-8'>
+      <header className="flex flex-col gap-5 md:gap-8">
         <Link href="/" className="cursor-pointer flex items-center gap-1">
-          <Image 
+          <Image
             src="/icons/QuantumLogo.png"
             width={400}
             height={280}
@@ -86,24 +80,34 @@ const AuthForm = ({ type }: { type: string }) => {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-          <Input 
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <Input
             id="email"
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            placeholder="Enter your email" 
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-          <Input 
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Password
+          </label>
+          <Input
             id="password"
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            placeholder="Enter your password" 
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
           />
         </div>
 
@@ -118,14 +122,17 @@ const AuthForm = ({ type }: { type: string }) => {
         <p className="text-14 font-normal text-gray-600">
           {type === 'sign-in'
             ? "Don't have an account?"
-            : "Already have an account?"}
+            : 'Already have an account?'}
         </p>
-        <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="form-link">
+        <Link
+          href={type === 'sign-in' ? '/sign-up' : '/sign-in'}
+          className="form-link"
+        >
           {type === 'sign-in' ? 'Sign up' : 'Sign in'}
         </Link>
       </footer>
     </section>
-  )
-}
+  );
+};
 
-export default AuthForm
+export default AuthForm;
