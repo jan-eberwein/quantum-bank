@@ -1,3 +1,4 @@
+import ChartsBox from '@/components/ChartsBox'
 import HeaderBox from '@/components/HeaderBox'
 import TotalBalanceBox from '@/components/TotalBalanceBox'
 import React from 'react'
@@ -20,6 +21,8 @@ const Home = () => {
           <TotalBalanceBox 
             balance={'10000.00'}
           />
+
+          <ChartsBox />
 
           <p>AI-powered banking application</p>
         </header>
