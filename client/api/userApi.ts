@@ -6,8 +6,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 // Hardcoded tokens for now
 // Account id=1 (Alice)
-const DEMO_BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczNDI5NTIwNywiZXhwIjox"
-    + "NzM0Mjk4ODA3fQ.uM6vl5SCSY9P4ExPjQz9GowPhNgSwfIozM3K6ShvynE";
+const DEMO_BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczNDM1NjM1OSwiZXhwIjox"
+    + "NzY1OTEzOTU5fQ.x3BJKqnC6St776IsqGrR20pEiWUFP-1CcVIx9Zl4ksY";
 // Account id=2 (Bob)
 //const DEMO_BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTczNDI5NTM5MywiZXhwIjox"
 //    + "NzM0Mjk4OTkzfQ.MveIZbsl0xQ1KQ-dlNEMAU-exXjJt18lV228H38bxx0";

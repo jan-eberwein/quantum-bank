@@ -56,7 +56,7 @@ exports.login = (req, res) => {
             if (err) return res.status(500).json({ message: 'Error comparing passwords' });
             if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
 
-            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '1y' });
             res.json({ message: 'Login successful', token });
         });
     });
