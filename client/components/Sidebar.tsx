@@ -5,13 +5,15 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import UserCard from "./UserCard";
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
 
   return (
-    <section className="sidebar">
+    <section className="sidebar flex flex-col h-full">
       <nav className="flex flex-col gap-4">
+        {/* Logo */}
         <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
           <div className="w-full max-w-[400px] mx-auto">
             <Image
@@ -26,6 +28,7 @@ const Sidebar = ({ user }: SidebarProps) => {
           </div>
         </Link>
 
+        {/* Navigation Links */}
         {sidebarLinks.map((item) => {
           const isActive =
             pathname === item.route || pathname.startsWith(`${item.route}/`);
@@ -34,25 +37,29 @@ const Sidebar = ({ user }: SidebarProps) => {
             <Link
               href={item.route}
               key={item.label}
-              className={cn("sidebar-link", { "bg-bank-gradient": isActive })}
+              className={cn(
+                "sidebar-link flex items-center gap-2 p-3 rounded-lg transition-colors",
+                { "bg-bank-gradient text-white": isActive }
+              )}
             >
               <div className="relative size-6">
                 <Image
                   src={item.imgURL}
                   alt={item.label}
                   fill
-                  className={cn({
+                  className={cn("brightness-0", {
                     "brightness-[3] invert-0": isActive,
                   })}
                 />
               </div>
-              <p className={cn("sidebar-label", { "!text-white": isActive })}>
+              <p className={cn("sidebar-label text-gray-700", { "!text-white": isActive })}>
                 {item.label}
               </p>
             </Link>
           );
         })}
       </nav>
+      <UserCard />
     </section>
   );
 };
