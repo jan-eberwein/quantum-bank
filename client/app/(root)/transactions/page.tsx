@@ -4,6 +4,7 @@ import { useState } from "react";
 import HeaderBox from "@/components/HeaderBox";
 import { Pagination } from "@/components/Pagination";
 import TransactionTable from "@/components/TransactionTable";
+import TransactionTableFilterArea from "@/components/TransactionTableFilterArea"; // Import the new component
 
 const mockAccounts = [
   {
@@ -525,8 +526,13 @@ const Transactions = ({ searchParams: { page } }: { searchParams: { page: string
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [dateFilter, setDateFilter] = useState<{ from: Date | null; to: Date | null }>({
+    from: null,
+    to: null,
+  });
 
   // Filter transactions based on search and category
+  // Filter logic with date filtering added
   const filteredTransactions = account.transactions
       .filter(
           (t) =>
@@ -535,7 +541,16 @@ const Transactions = ({ searchParams: { page } }: { searchParams: { page: string
       )
       .filter((t) =>
           t.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      )
+      .filter((t) => {
+        const transactionDate = new Date(t.date);
+        if (dateFilter.from && dateFilter.to) {
+          return transactionDate >= dateFilter.from && transactionDate <= dateFilter.to;
+        } else if (dateFilter.from) {
+          return transactionDate.toDateString() === dateFilter.from.toDateString();
+        }
+        return true; // No date filter
+      });
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
@@ -570,34 +585,16 @@ const Transactions = ({ searchParams: { page } }: { searchParams: { page: string
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="filters mb-4 flex gap-4">
-            <input
-                type="text"
-                placeholder="Search transactions"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300"
-            />
-            <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300"
-            >
-              <option value="All">All Categories</option>
-              <option value="Food & Beverages">Food & Beverages</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Travel">Travel</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Housing">Housing</option>
-              <option value="Friends & Family">Friends & Family</option>
-              <option value="Taxes">Taxes</option>
-              <option value="Transport">Transport</option>
-              <option value="Utilities">Utilities</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Subscription">Subscription</option>
-            </select>
-          </div>
+          {/* Use the new Filter Component */}
+          <TransactionTableFilterArea
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              dateFilter={dateFilter}
+              setDateFilter={setDateFilter}
+          />
+
 
           <section className="flex w-full flex-col gap-6">
             {/* Table */}
