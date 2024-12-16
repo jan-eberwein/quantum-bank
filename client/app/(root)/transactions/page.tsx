@@ -1,3 +1,6 @@
+"use client"; // Marks this file as a Client Component
+
+import { useState } from "react";
 import HeaderBox from "@/components/HeaderBox";
 import { Pagination } from "@/components/Pagination";
 import TransactionTable from "@/components/TransactionTable";
@@ -514,58 +517,106 @@ const mockAccounts = [
   },
 ];
 
-const Transactions = ({
-  searchParams: { page },
-}: {
-  searchParams: { page: string };
-}) => {
+const Transactions = ({ searchParams: { page } }: { searchParams: { page: string } }) => {
   const currentPage = Number(page) || 1;
 
   const account = mockAccounts[0];
   const rowsPerPage = 14;
-  const totalPages = Math.ceil(account.transactions.length / rowsPerPage);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Filter transactions based on search and category
+  const filteredTransactions = account.transactions
+      .filter(
+          (t) =>
+              selectedCategory === "All" ||
+              t.category.toLowerCase() === selectedCategory.toLowerCase()
+      )
+      .filter((t) =>
+          t.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
   const indexOfLastTransaction = currentPage * rowsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
-  const currentTransactions = account.transactions.slice(
-    indexOfFirstTransaction,
-    indexOfLastTransaction
+  const currentTransactions = filteredTransactions.slice(
+      indexOfFirstTransaction,
+      indexOfLastTransaction
   );
 
   return (
-    <div className="transactions">
-      <div className="transactions-header">
-        <HeaderBox title="Transactions" subtext={""} />
-      </div>
-
-      <div className="space-y-6">
-        <div className="transactions-account">
-          <div className="flex flex-col gap-2">
-            <h2 className="text-18 font-bold text-white">{account.name}</h2>
-            <p className="text-14 text-blue-25">{account.officialName}</p>
-            <p className="text-14 font-semibold tracking-[1.1px] text-white">
-              ●●●● ●●●● ●●●● {account.mask}
-            </p>
-          </div>
-
-          <div className="transactions-account-balance">
-            <p className="text-14">Current balance</p>
-            <p className="text-24 text-center font-bold">
-              {account.currentBalance}
-            </p>
-          </div>
+      <div className="transactions">
+        <div className="transactions-header">
+          <HeaderBox title="Transactions" subtext="" />
         </div>
 
-        <section className="flex w-full flex-col gap-6">
-          <TransactionTable transactions={currentTransactions} />
-          {totalPages > 1 && (
-            <div className="my-4 w-full">
-              <Pagination totalPages={totalPages} page={currentPage} />
+        <div className="space-y-6">
+          <div className="transactions-account">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-18 font-bold text-white">{account.name}</h2>
+              <p className="text-14 text-blue-25">{account.officialName}</p>
+              <p className="text-14 font-semibold tracking-[1.1px] text-white">
+                ●●●● ●●●● ●●●● {account.mask}
+              </p>
             </div>
+
+            <div className="transactions-account-balance">
+              <p className="text-14">Current balance</p>
+              <p className="text-24 text-center font-bold">
+                {account.currentBalance}
+              </p>
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="filters mb-4 flex gap-4">
+            <input
+                type="text"
+                placeholder="Search transactions"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300"
+            />
+            <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300"
+            >
+              <option value="All">All Categories</option>
+              <option value="Food & Beverages">Food & Beverages</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Travel">Travel</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Housing">Housing</option>
+              <option value="Friends & Family">Friends & Family</option>
+              <option value="Taxes">Taxes</option>
+              <option value="Transport">Transport</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Subscription">Subscription</option>
+            </select>
+          </div>
+
+          <section className="flex w-full flex-col gap-6">
+            {/* Table */}
+            <TransactionTable transactions={currentTransactions} />
+            {totalPages > 1 && (
+                <div className="my-4 w-full">
+                  <Pagination totalPages={totalPages} page={currentPage} />
+                </div>
+            )}
+          </section>
+
+          {/* No Results Message */}
+          {filteredTransactions.length === 0 && (
+              <div className="text-center mt-4 text-gray-600">
+                No transactions match your search or filters.
+              </div>
           )}
-        </section>
+        </div>
       </div>
-    </div>
   );
 };
 

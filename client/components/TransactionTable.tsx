@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -5,78 +6,81 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-  } from "@/components/ui/table"
-  import { transactionCategoryStyles } from "@/constants"
-  import { cn, formatAmount, formatDateTime, getTransactionStatus, removeSpecialCharacters } from "@/lib/utils"
-  
-  const CategoryBadge = ({ category }: CategoryBadgeProps) => {
+} from "@/components/ui/table";
+import { formatAmount, formatDateTime, removeSpecialCharacters } from "@/lib/utils";
+import { transactionCategoryStyles } from "@/constants";
+
+const CategoryBadge = ({ category }: { category: string }) => {
     const {
-      borderColor,
-      backgroundColor,
-      textColor,
-      chipBackgroundColor,
-     } = transactionCategoryStyles[category as keyof typeof transactionCategoryStyles] || transactionCategoryStyles.default
-     
+        borderColor,
+        backgroundColor,
+        textColor,
+        chipBackgroundColor,
+    } = transactionCategoryStyles[category as keyof typeof transactionCategoryStyles] || transactionCategoryStyles.default;
+
     return (
-      <div className={cn('category-badge', borderColor, chipBackgroundColor)}>
-        <div className={cn('size-2 rounded-full', backgroundColor)} />
-        <p className={cn('text-[12px] font-medium', textColor)}>{category}</p>
-      </div>
-    )
-  } 
-  
-  const TransactionTable = ({ transactions }: TransactionTableProps) => {
+        <div className={`category-badge ${borderColor} ${chipBackgroundColor}`}>
+            <div className={`size-2 rounded-full ${backgroundColor}`} />
+            <p className={`text-[12px] font-medium ${textColor}`}>{category}</p>
+        </div>
+    );
+};
+
+const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
+    // Filtering Logic
+    const filteredTransactions = transactions
+        .filter(
+            (t) =>
+                selectedCategory === "All" ||
+                t.category.toLowerCase() === selectedCategory.toLowerCase()
+        )
+        .filter((t) =>
+            removeSpecialCharacters(t.name)
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+        );
+
     return (
-      <Table>
-        <TableHeader className="bg-[#f9fafb]">
-          <TableRow>
-            <TableHead className="px-2">Transaction</TableHead>
-            <TableHead className="px-2">Amount</TableHead>
-            <TableHead className="px-2">Status</TableHead>
-            <TableHead className="px-2">Date</TableHead>
-            <TableHead className="px-2 max-md:hidden">Category</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {transactions.map((t: Transaction) => {
-            const status = getTransactionStatus(new Date(t.date))
-            const amount = formatAmount(t.amount)
-  
-            return (
-              <TableRow key={t.$id} className={`${amount[0] === '-' ? 'bg-[#FFFBFA]' : 'bg-[#F6FEF9]'} !over:bg-none !border-b-DEFAULT`}>
-                <TableCell className="max-w-[250px] pl-2 pr-10">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-14 truncate font-semibold text-[#344054]">
-                      {removeSpecialCharacters(t.name)}
-                    </h1>
-                  </div>
-                </TableCell>
-  
-                <TableCell className={`pl-2 pr-10 font-semibold ${
-                  amount[0] === '-' ?
-                    'text-[#f04438]'
-                    : 'text-[#039855]'
-                }`}>
-                  {amount}
-                </TableCell>
-  
-                <TableCell className="pl-2 pr-10">
-                  <CategoryBadge category={status} /> 
-                </TableCell>
-  
-                <TableCell className="min-w-32 pl-2 pr-10">
-                  {formatDateTime(new Date(t.date)).dateTime}
-                </TableCell>
-  
-                <TableCell className="pl-2 pr-10 max-md:hidden">
-                 <CategoryBadge category={t.category} /> 
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
-    )
-  }
-  
-  export default TransactionTable
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Transaction</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Category</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {filteredTransactions.map((t) => (
+                    <TableRow key={t.$id}>
+                        <TableCell>
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold">{removeSpecialCharacters(t.name)}</span>
+                            </div>
+                        </TableCell>
+                        <TableCell
+                            className={`font-semibold ${
+                                t.amount < 0 ? "text-red-600" : "text-green-600"
+                            }`}
+                        >
+                            {formatAmount(t.amount)}
+                        </TableCell>
+                        <TableCell>
+                            <span>{t.pending ? "Pending" : "Completed"}</span>
+                        </TableCell>
+                        <TableCell>{formatDateTime(new Date(t.date)).dateTime}</TableCell>
+                        <TableCell>
+                            <CategoryBadge category={t.category} />
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
+};
+
+export default TransactionTable;
