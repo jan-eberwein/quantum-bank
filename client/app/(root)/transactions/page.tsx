@@ -1,5 +1,6 @@
 "use client"; // Marks this file as a Client Component
 
+import React from "react";
 import { useState } from "react";
 import HeaderBox from "@/components/HeaderBox";
 import { Pagination } from "@/components/Pagination";
@@ -526,10 +527,11 @@ const Transactions = ({ searchParams: { page } }: { searchParams: { page: string
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [dateFilter, setDateFilter] = useState<{ from: Date | null; to: Date | null }>({
-    from: null,
-    to: null,
+  const [dateFilter, setDateFilter] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: undefined,
+    to: undefined,
   });
+
 
   // Filter transactions based on search and category
   // Filter logic with date filtering added

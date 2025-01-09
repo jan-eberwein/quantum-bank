@@ -1,7 +1,7 @@
-@import "react-day-picker/dist/style.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 * {
   margin: 0;
@@ -485,3 +485,51 @@
   width: 8px;
   height: 8px;
 }
+
+/*
+  .rdp-day--selected {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 50%;
+  }
+
+  [aria-selected="true"] {
+    background-color: #4caf50;
+    color: red;
+    border-radius: 10%;
+  }
+
+  .day-range-start {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 10%;
+  }
+
+  .day-range-end {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 10%;
+  }
+
+  .day-range-middle {
+    background-color: #4caf50 !important;
+    color: brown !important;
+    border-radius: 50%;
+  }
+
+  .rdp-day:hover {
+    background-color: #e8f5e9 !important;
+    color: black !important;
+    border-radius: 50%;
+  }
+
+  [aria-selected="true"]:hover {
+    background-color: #43a047 !important;
+    color: blue !important;
+  }
+
+  [aria-selected="true"].rdp-day--range {
+    background-color: red !important;
+    color: black !important;
+  }
+*/
