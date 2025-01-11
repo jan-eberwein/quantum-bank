@@ -12,11 +12,12 @@ export function cn(...inputs: ClassValue[]) {
 export const formatDateTime = (dateString: Date) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     weekday: "short", // abbreviated weekday name (e.g., 'Mo')
+    year: "numeric",
     month: "short", // abbreviated month name (e.g., 'Okt')
     day: "numeric", // numeric day of the month (e.g., '25')
     hour: "numeric", // numeric hour (e.g., '8')
     minute: "numeric", // numeric minute (e.g., '30')
-    hour12: false, // use 24-hour clock
+    hour12: true, // don't use 24-hour clock
   };
 
   const dateDayOptions: Intl.DateTimeFormatOptions = {
@@ -35,26 +36,26 @@ export const formatDateTime = (dateString: Date) => {
   const timeOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric", // numeric hour (e.g., '8')
     minute: "numeric", // numeric minute (e.g., '30')
-    hour12: false, // use 24-hour clock
+    hour12: true, // don't use 24-hour clock
   };
 
   const formattedDateTime: string = new Date(dateString).toLocaleString(
-    "de-DE",
+    "en-US",
     dateTimeOptions
   );
 
   const formattedDateDay: string = new Date(dateString).toLocaleString(
-    "de-DE",
+    "en-US",
     dateDayOptions
   );
 
   const formattedDate: string = new Date(dateString).toLocaleString(
-    "de-DE",
+    "en-US",
     dateOptions
   );
 
   const formattedTime: string = new Date(dateString).toLocaleString(
-    "de-DE",
+    "en-US",
     timeOptions
   );
 
@@ -67,7 +68,7 @@ export const formatDateTime = (dateString: Date) => {
 };
 
 export function formatAmount(amount: number): string {
-  const formatter = new Intl.NumberFormat("de-DE", {
+  const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 2,

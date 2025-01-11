@@ -1,3 +1,5 @@
+"use client"
+import { useCopilotReadable } from "@copilotkit/react-core";
 import { useState } from "react";
 import {
     Table,
@@ -42,6 +44,7 @@ const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => 
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase())
         );
+
 
     return (
         <Table>
