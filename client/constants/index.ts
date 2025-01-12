@@ -9,11 +9,11 @@ export const sidebarLinks = [
     route: "/transactions",
     label: "Transactions",
   },
-  {
+  /*{
     imgURL: "/icons/transaction.svg",
     route: "/transactionsApi",
     label: "Transactions (API)",
-  },
+  },*/
   {
     imgURL: "/icons/user.svg",
     route: "/account",

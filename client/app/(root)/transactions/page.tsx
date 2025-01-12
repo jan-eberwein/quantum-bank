@@ -1,12 +1,12 @@
-"use client"; // Marks this file as a Client Component
+"use client";
 
-import React from "react";
-import {useState} from "react";
+import React, { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import HeaderBox from "@/components/HeaderBox";
-import {Pagination} from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import TransactionTable from "@/components/TransactionTable";
 import TransactionTableFilterArea from "@/components/TransactionTableFilterArea";
-import {useCopilotReadable} from "@copilotkit/react-core"; // Import the new component
+import { useCopilotReadable } from "@copilotkit/react-core";
 
 const mockAccounts = [
     {
@@ -520,31 +520,34 @@ const mockAccounts = [
     },
 ];
 
-const Transactions = ({searchParams: {page}}: { searchParams: { page: string } }) => {
-    const currentPage = Number(page) || 1;
+const Transactions = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const pageParam = searchParams.get("page") || "1";
+    const currentPage = Number(pageParam);
 
     const account = mockAccounts[0];
     const rowsPerPage = 14;
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const [dateFilter, setDateFilter] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
+    const [searchQuery, setSearchQuery] = useState(searchParams.get("searchQuery") || "");
+    const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All");
+    const [dateFilter, setDateFilter] = useState<{ from: Date | undefined; to: Date | undefined }>({
         from: undefined,
         to: undefined,
     });
 
+    // Update query parameters and reset page to 1
+    const updateQueryParams = (key: string, value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set(key, value);
+        params.set("page", "1"); // Reset to page 1
+        router.push(`?${params.toString()}`);
+    };
 
-    // Filter transactions based on search and category
-    // Filter logic with date filtering added
+    // Filter transactions based on filters
     const filteredTransactions = account.transactions
-        .filter(
-            (t) =>
-                selectedCategory === "All" ||
-                t.category.toLowerCase() === selectedCategory.toLowerCase()
-        )
-        .filter((t) =>
-            t.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        .filter((t) => selectedCategory === "All" || t.category.toLowerCase() === selectedCategory.toLowerCase())
+        .filter((t) => t.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter((t) => {
             const transactionDate = new Date(t.date);
             if (dateFilter.from && dateFilter.to) {
@@ -565,14 +568,14 @@ const Transactions = ({searchParams: {page}}: { searchParams: { page: string } }
     );
 
     useCopilotReadable({
-        description: "All transactions of the users bank account.",
+        description: "All transactions of the user's bank account.",
         value: account.transactions,
     });
 
     return (
         <div className="transactions">
             <div className="transactions-header">
-                <HeaderBox title="Transactions" subtext=""/>
+                <HeaderBox title="Transactions" subtext="" />
             </div>
 
             <div className="space-y-6">
@@ -587,29 +590,37 @@ const Transactions = ({searchParams: {page}}: { searchParams: { page: string } }
 
                     <div className="transactions-account-balance">
                         <p className="text-14">Current balance</p>
-                        <p className="text-24 text-center font-bold">
-                            {account.currentBalance}
-                        </p>
+                        <p className="text-24 text-center font-bold">{account.currentBalance}</p>
                     </div>
                 </div>
 
-                {/* Use the new Filter Component */}
+                {/* Filter Component */}
                 <TransactionTableFilterArea
                     searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
+                    setSearchQuery={(value) => {
+                        setSearchQuery(value);
+                        updateQueryParams("searchQuery", value);
+                    }}
                     selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
+                    setSelectedCategory={(value) => {
+                        setSelectedCategory(value);
+                        updateQueryParams("category", value);
+                    }}
                     dateFilter={dateFilter}
-                    setDateFilter={setDateFilter}
+                    setDateFilter={(filter) => {
+                        setDateFilter(filter);
+                        const from = filter.from ? filter.from.toISOString() : "";
+                        const to = filter.to ? filter.to.toISOString() : "";
+                        updateQueryParams("dateFilter", `${from}_${to}`);
+                    }}
                 />
-
 
                 <section className="flex w-full flex-col gap-6">
                     {/* Table */}
-                    <TransactionTable transactions={currentTransactions}/>
+                    <TransactionTable transactions={currentTransactions} />
                     {totalPages > 1 && (
                         <div className="my-4 w-full">
-                            <Pagination totalPages={totalPages} page={currentPage}/>
+                            <Pagination totalPages={totalPages} page={currentPage} />
                         </div>
                     )}
                 </section>

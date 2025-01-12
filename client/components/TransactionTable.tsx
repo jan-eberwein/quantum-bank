@@ -1,6 +1,5 @@
-"use client"
-import { useCopilotReadable } from "@copilotkit/react-core";
-import { useState } from "react";
+"use client";
+
 import {
     Table,
     TableBody,
@@ -29,23 +28,6 @@ const CategoryBadge = ({ category }: { category: string }) => {
 };
 
 const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
-
-    // Filtering Logic
-    const filteredTransactions = transactions
-        .filter(
-            (t) =>
-                selectedCategory === "All" ||
-                t.category.toLowerCase() === selectedCategory.toLowerCase()
-        )
-        .filter((t) =>
-            removeSpecialCharacters(t.name)
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
-        );
-
-
     return (
         <Table>
             <TableHeader>
@@ -58,7 +40,7 @@ const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => 
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {filteredTransactions.map((t) => (
+                {transactions.map((t) => (
                     <TableRow key={t.$id}>
                         <TableCell>
                             <div className="flex items-center gap-2">
