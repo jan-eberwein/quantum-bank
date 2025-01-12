@@ -16,7 +16,7 @@ export const sidebarLinks = [
   },*/
   {
     imgURL: "/icons/user.svg",
-    route: "/account",
+    route: "/settings",
     label: "Account Settings",
   },
 ];
