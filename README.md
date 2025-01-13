@@ -2,10 +2,10 @@
 
 AI-powered banking application
 
-A project developed during the **Hypermedia UX Engineering** course at **FH Oberösterreich Campus Hagenberg** Department of **Interactive Media**
+A project developed the first semester at **FH Oberösterreich Campus Hagenberg** Department of **Interactive Media**
 
 
-Quantum Bank allows users to send, receive, and transfer money.
+Quantum Bank allows users to send, receive, and transfer money, check their transactions and visualize the data in various ways.
 The project uses [React](https://react.dev/) for the frontend and [Appwrite](https://appwrite.io/) for backend functionalities (like user authentification and NoSQL database), showcasing the integration of modern web technologies for a seamless user experience. Styling was done with [Tailwind CSS](https://tailwindcss.com/), as well as additional UI components from [Shadcn](https://ui.shadcn.com/) 
 
 Project members:
@@ -19,14 +19,14 @@ Project members:
 
 ```js
 git clone QUANTUM-BANK
-cd quantum-social
+cd quantum-bank
 npm install
 npm run dev
 
-// Server is runnung on "http://localhost:5173"
+// Server is runnung on "http://localhost:3000"
 ```
 
-> **Note:** '.env.local' file with necessary app keys is needed in order to connect to Backend as a Service **"APPWRITE"**!
+> **Note:** '.env.local' file with necessary api key is needed in order to connect to **"ChatGPT API"**!
 
 ---
 
