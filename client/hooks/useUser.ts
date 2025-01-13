@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import userApi from "@/api/userApi";
+import apiService from "@/lib/apiService"; // Centralized API service
 
 const useUser = () => {
     const [user, setUser] = useState<UserApi | null>(null);
@@ -12,14 +12,10 @@ const useUser = () => {
             setError(null);
 
             try {
-                const userData = await userApi.getLoggedInUser();
+                const userData = await apiService.get<UserApi>(`/users/me`);
                 setUser(userData);
-            } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("An unexpected error occurred");
-                }
+            } catch (err: any) {
+                setError(err?.message || "An unexpected error occurred");
             } finally {
                 setLoading(false);
             }
