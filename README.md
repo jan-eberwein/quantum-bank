@@ -6,7 +6,8 @@ A project developed in the first semester at **FH Oberösterreich Campus Hagenbe
 
 
 Quantum Bank allows users to send, receive, and transfer money, check their transactions and visualize the data in various ways.
-The project uses [React](https://react.dev/) for the frontend and [Appwrite](https://appwrite.io/) for backend functionalities (like user authentification and NoSQL database), showcasing the integration of modern web technologies for a seamless user experience. Styling was done with [Tailwind CSS](https://tailwindcss.com/), as well as additional UI components from [Shadcn](https://ui.shadcn.com/) 
+
+The project uses [React](https://react.dev/) for the frontend and a lightweight [Express.js](https://expressjs.com/) backend showcasing the integration of modern web technologies for a seamless user experience. Styling was done with [Tailwind CSS](https://tailwindcss.com/), as well as additional UI components from [Shadcn](https://ui.shadcn.com/) 
 
 Project members:
 
