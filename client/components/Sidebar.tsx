@@ -7,6 +7,7 @@ import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import UserCard from "./UserCard";
 import {useCopilotAction, useCopilotReadable} from "@copilotkit/react-core";
+import CopilotChartHandler from "./CopilotChartHandler";
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
@@ -99,6 +100,8 @@ const Sidebar = ({ user }: SidebarProps) => {
           );
         })}
       </nav>
+      {/* ✅ This handles dynamic chart generation */}
+      <CopilotChartHandler />
       <UserCard />
     </section>
   );
