@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import UserCard from "./UserCard";
 import {useCopilotAction, useCopilotReadable} from "@copilotkit/react-core";
 import {TestShadcnChartCard} from "@/components/TestShadcnChartCard";
 import React from "react";
+import CopilotChartHandler from "./CopilotChartHandler";
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
@@ -117,6 +119,8 @@ const Sidebar = ({ user }: SidebarProps) => {
           );
         })}
       </nav>
+      {/* ✅ This handles dynamic chart generation */}
+      <CopilotChartHandler />
       <UserCard />
     </section>
   );
