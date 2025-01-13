@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "possible given the data you have."
             }
             labels={{
-              title: "Your Assistant",
+              title: "Quantum Bank AI",
               initial: "Hi! 👋 How can I assist you today?",
             }}
             shortcut="/"
