@@ -2,7 +2,7 @@
 
 AI-powered banking application
 
-A project developed the first semester at **FH Oberösterreich Campus Hagenberg** Department of **Interactive Media**
+A project developed in the first semester at **FH Oberösterreich Campus Hagenberg** Department of **Interactive Media**
 
 
 Quantum Bank allows users to send, receive, and transfer money, check their transactions and visualize the data in various ways.
