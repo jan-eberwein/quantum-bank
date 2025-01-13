@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -7,6 +6,8 @@ import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import UserCard from "./UserCard";
 import {useCopilotAction, useCopilotReadable} from "@copilotkit/react-core";
+import {TestShadcnChartCard} from "@/components/TestShadcnChartCard";
+import React from "react";
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
@@ -46,6 +47,23 @@ const Sidebar = ({ user }: SidebarProps) => {
         await router.push(routeName);
       } catch (error) {
         console.error("Failed to navigate to the route:", error);
+      }
+    },
+  });
+
+  useCopilotAction({
+    name: "displayChart",
+    description: "Render the TestShadcnChart component.",
+    parameters: [],
+    render: ({status}) => {
+      try {
+        if (status === 'inProgress') {
+          return "Loading...";
+        } else {
+          return <TestShadcnChartCard></TestShadcnChartCard>;
+        }
+      } catch (error) {
+        console.error(error.message);
       }
     },
   });
