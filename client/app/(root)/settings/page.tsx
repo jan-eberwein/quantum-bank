@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import HeaderBox from "@/components/HeaderBox";
 
 const Page = () => {
     const [receiveNotifications, setReceiveNotifications] = useState(false);
@@ -37,8 +38,11 @@ const Page = () => {
     });
 
     return (
-        <div className="p-6">
-            <h1 className="text-xl font-semibold mb-4">Settings</h1>
+
+        <div className="settings-page">
+            <div className="settings-header">
+                <HeaderBox title="Settings" subtext="" />
+            </div>
             <div className="flex items-center gap-4">
                 <input
                     type="checkbox"
