@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <CopilotKit runtimeUrl="/api/copilotkit">
       <main className="flex h-screen w-full font-inter">
         <Sidebar user={loggedIn} />
-        <div className="w-3/4">{children}</div>
+        <div className="flex w-full">{children}</div>
 
         
 

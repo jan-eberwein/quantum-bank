@@ -27,7 +27,7 @@ const DynamicChart: React.FC<ChartProps> = ({ type, data, labels, title }) => {
   };
 
   return (
-    <div className="p-4 border border-gray-300 rounded-lg bg-white shadow-md">
+    <div className="p-4 border rounded-lg bg-white shadow-md">
       <h2 className="text-lg font-bold mb-2">{title}</h2>
       {type === "bar" && <Bar data={chartData} />}
       {type === "line" && <Line data={chartData} />}
