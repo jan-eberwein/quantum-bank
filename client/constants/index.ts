@@ -510,6 +510,31 @@ export const mockAccounts = [
   },
 ];
 
+// client/constants/index.ts
+
+export const mockCategoriesData = [
+  { category: "Shopping", amount: 350 },
+  { category: "Utilities", amount: 250 },
+  { category: "Entertainment", amount: 150 },
+  { category: "Salary", amount: 2000 },
+];
+
+export const mockMonthlySpending = [
+  { month: "Jan", amount: 400 },
+  { month: "Feb", amount: 600 },
+  { month: "Mar", amount: 500 },
+  { month: "Apr", amount: 700 },
+  { month: "May", amount: 300 },
+];
+
+export const mockIncomeVsExpenses = [
+  { month: "Jan", income: 2000, expenses: 1200 },
+  { month: "Feb", income: 2200, expenses: 1500 },
+  { month: "Mar", income: 2100, expenses: 1400 },
+  { month: "Apr", income: 2300, expenses: 1700 },
+  { month: "May", income: 2000, expenses: 1600 },
+];
+
 
 export const sidebarLinks = [
   {
