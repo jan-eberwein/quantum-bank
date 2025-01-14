@@ -27,7 +27,7 @@ const CategoryBadge = ({ category }: { category: string }) => {
     );
 };
 
-const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => {
+const TransactionTable = ({ transactions, dateFormat = "short" }: { transactions: Transaction[], dateFormat?: "short" | "long" }) => {
     return (
         <Table>
             <TableHeader>
@@ -57,7 +57,11 @@ const TransactionTable = ({ transactions }: { transactions: Transaction[] }) => 
                         <TableCell>
                             <span>{t.pending ? "Pending" : "Completed"}</span>
                         </TableCell>
-                        <TableCell>{formatDateTime(new Date(t.date)).dateTime}</TableCell>
+                        <TableCell>
+                            {dateFormat === "short"
+                                ? formatDateTime(new Date(t.date)).dayMonth
+                                : formatDateTime(new Date(t.date)).dateTime}
+                        </TableCell>
                         <TableCell>
                             <CategoryBadge category={t.category} />
                         </TableCell>

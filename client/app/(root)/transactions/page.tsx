@@ -111,7 +111,7 @@ const Transactions = () => {
 
                 <section className="flex w-full flex-col gap-6">
                     {/* Table */}
-                    <TransactionTable transactions={currentTransactions} />
+                    <TransactionTable transactions={currentTransactions} dateFormat="long" />
                     {totalPages > 1 && (
                         <div className="my-4 w-full">
                             <Pagination totalPages={totalPages} page={currentPage} />

@@ -28,7 +28,7 @@ const LastTransactionsWidget = () => {
           Show all
         </button>
       </div>
-      <TransactionTable transactions={lastFiveTransactions} />
+      <TransactionTable transactions={lastFiveTransactions} dateFormat="short" />
     </div>
   );
 };

@@ -39,6 +39,11 @@ export const formatDateTime = (dateString: Date) => {
     hour12: true, // don't use 24-hour clock
   };
 
+  const dayMonthOptions: Intl.DateTimeFormatOptions = {
+    month: "short", // abbreviated month name (e.g., 'Okt')
+    day: "numeric", // numeric day of the month (e.g., '25')
+  };
+
   const formattedDateTime: string = new Date(dateString).toLocaleString(
     "en-US",
     dateTimeOptions
@@ -59,13 +64,20 @@ export const formatDateTime = (dateString: Date) => {
     timeOptions
   );
 
+  const formattedDayMonth: string = new Date(dateString).toLocaleString(
+    "en-US",
+    dayMonthOptions
+  );
+
   return {
     dateTime: formattedDateTime,
     dateDay: formattedDateDay,
     dateOnly: formattedDate,
     timeOnly: formattedTime,
+    dayMonth: formattedDayMonth,
   };
 };
+
 
 export function formatAmount(amount: number): string {
   const formatter = new Intl.NumberFormat("en-US", {
