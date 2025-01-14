@@ -21,6 +21,7 @@ const TotalBalanceBox = ({balance}: TotalBalanceBoxProps) => {
                     <AnimatedCounter amount={balance}/>
                 </div>
             </div>
+            
         </section>
     );
 };
