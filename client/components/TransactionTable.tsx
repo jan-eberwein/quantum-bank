@@ -27,14 +27,14 @@ const CategoryBadge = ({ category }: { category: string }) => {
     );
 };
 
-const TransactionTable = ({ transactions, dateFormat = "short" }: { transactions: Transaction[], dateFormat?: "short" | "long" }) => {
+const TransactionTable = ({ transactions, dateFormat = "short", showStatus = true }: { transactions: Transaction[], dateFormat?: "short" | "long", showStatus?: boolean }) => {
     return (
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead>Transaction</TableHead>
                     <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
+                    {showStatus && <TableHead>Status</TableHead>}
                     <TableHead>Date</TableHead>
                     <TableHead>Category</TableHead>
                 </TableRow>
@@ -54,9 +54,11 @@ const TransactionTable = ({ transactions, dateFormat = "short" }: { transactions
                         >
                             {formatAmount(t.amount)}
                         </TableCell>
-                        <TableCell>
-                            <span>{t.pending ? "Pending" : "Completed"}</span>
-                        </TableCell>
+                        {showStatus && (
+                            <TableCell>
+                                <span>{t.pending ? "Pending" : "Completed"}</span>
+                            </TableCell>
+                        )}
                         <TableCell>
                             {dateFormat === "short"
                                 ? formatDateTime(new Date(t.date)).dayMonth
