@@ -6,7 +6,7 @@ import HeaderBox from "@/components/HeaderBox";
 import { Pagination } from "@/components/Pagination";
 import TransactionTable from "@/components/TransactionTable";
 import TransactionTableFilterArea from "@/components/TransactionTableFilterArea";
-import { useCopilotReadable } from "@copilotkit/react-core";
+import {useCopilotReadable} from "@copilotkit/react-core";
 
 const mockAccounts = [
     {
@@ -530,7 +530,7 @@ const Transactions = () => {
     const rowsPerPage = 14;
 
     const [searchQuery, setSearchQuery] = useState(searchParams.get("searchQuery") || "");
-    const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All");
+    const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All Categories");
     const [dateFilter, setDateFilter] = useState<{ from: Date | undefined; to: Date | undefined }>({
         from: undefined,
         to: undefined,
@@ -546,7 +546,7 @@ const Transactions = () => {
 
     // Filter transactions based on filters
     const filteredTransactions = account.transactions
-        .filter((t) => selectedCategory === "All" || t.category.toLowerCase() === selectedCategory.toLowerCase())
+        .filter((t) => selectedCategory === "All Categories" || t.category.toLowerCase() === selectedCategory.toLowerCase())
         .filter((t) => t.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter((t) => {
             const transactionDate = new Date(t.date);
@@ -570,6 +570,11 @@ const Transactions = () => {
     useCopilotReadable({
         description: "All transactions of the user's bank account.",
         value: account.transactions,
+    });
+
+    useCopilotReadable({
+        description: "All transactions of the user's bank account that apply to the currently set filters.",
+        value: filteredTransactions,
     });
 
     return (

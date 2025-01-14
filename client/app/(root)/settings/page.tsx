@@ -20,7 +20,7 @@ const Page = () => {
 
     // Handle toggles for all settings
     const handleToggle = (category: keyof typeof settings.notifications) => {
-        if (category === "all") {
+        if (category === "All Categories") {
             const newState = !settings.notifications.all;
             setSettings((prev) => ({
                 ...prev,

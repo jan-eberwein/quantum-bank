@@ -10,6 +10,7 @@ import {useCopilotAction, useCopilotReadable} from "@copilotkit/react-core";
 import {TestShadcnChartCard} from "@/components/TestShadcnChartCard";
 import React from "react";
 import CopilotChartHandler from "./CopilotChartHandler";
+import { format } from "date-fns";
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
@@ -23,6 +24,15 @@ const Sidebar = ({ user }: SidebarProps) => {
   useCopilotReadable({
     description: "The currently signed in user",
     value: user,
+  });
+
+  // Get the current date and format it as needed
+  const currentDate = format(new Date(), "yyyy-MM-dd");
+
+  // Make the current date readable by Copilot
+  useCopilotReadable({
+    description: "The current date in yyyy-MM-dd format",
+    value: currentDate,
   });
 
   // Define Copilot action
