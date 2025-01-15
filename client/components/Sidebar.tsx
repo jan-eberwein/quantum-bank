@@ -4,10 +4,10 @@ import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import UserCard from "./UserCard";
-import {useCopilotAction, useCopilotReadable} from "@copilotkit/react-core";
-import {TestShadcnChartCard} from "@/components/TestShadcnChartCard";
+import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import { TestShadcnChartCard } from "@/components/TestShadcnChartCard";
 import React from "react";
 import CopilotChartHandler from "./CopilotChartHandler";
 import { format } from "date-fns";
@@ -48,14 +48,11 @@ const Sidebar = ({ user }: SidebarProps) => {
       },
     ],
     handler: async ({ routeName }) => {
-      // Check if routeName exists and is valid
       if (!routeName || typeof routeName !== "string") {
         console.error("Invalid routeName provided");
         return;
       }
-
       try {
-        // Use Next.js router to navigate
         await router.push(routeName);
       } catch (error) {
         console.error("Failed to navigate to the route:", error);
@@ -63,29 +60,23 @@ const Sidebar = ({ user }: SidebarProps) => {
     },
   });
 
-  useCopilotAction({
-    name: "displayChart",
-    description: "Render the TestShadcnChart component.",
-    parameters: [],
-    render: ({status}) => {
-      try {
-        if (status === 'inProgress') {
-          return "Loading...";
-        } else {
-          return <TestShadcnChartCard></TestShadcnChartCard>;
-        }
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
-  });
-
-    return (
+  return (
     <section className="sidebar flex flex-col h-full">
       <nav className="flex flex-col gap-4">
         {/* Logo */}
         <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
-          <div className="w-full max-w-[400px] mx-auto">
+          <div className="w-full max-w-[400px] mx-auto hidden sm:block lg:hidden">
+            <Image
+              src="/icons/QuantumLogo_small.png"
+              layout="responsive"
+              width={16}
+              height={9}
+              objectFit="contain"
+              alt="Quantum small logo"
+              className="sidebar-logo-tablet"
+            />
+          </div>
+          <div className="w-full max-w-[400px] mx-auto hidden lg:block">
             <Image
               src="/icons/QuantumLogo.png"
               layout="responsive"
@@ -122,14 +113,17 @@ const Sidebar = ({ user }: SidebarProps) => {
                   })}
                 />
               </div>
-              <p className={cn("sidebar-label text-gray-700", { "!text-white": isActive })}>
+              <p
+                className={cn("sidebar-label text-gray-700", {
+                  "!text-white": isActive,
+                })}
+              >
                 {item.label}
               </p>
             </Link>
           );
         })}
       </nav>
-      {/* ✅ This handles dynamic chart generation */}
       <CopilotChartHandler />
       <UserCard />
     </section>

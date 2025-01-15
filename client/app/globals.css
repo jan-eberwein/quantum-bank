@@ -393,7 +393,7 @@
       @apply w-[80px]; /* Narrow width */
     }
     .sidebar-logo {
-      @apply hidden; /* Hide large logo */
+      @apply block text-[16px] font-bold text-center; /* Hide large logo */
     }
     .sidebar-link {
       @apply justify-center; /* Center align icons */
@@ -406,14 +406,15 @@
   @media (max-width: 768px) {
     /* Small screens */
     .sidebar {
-      @apply w-[60px]; /* Even narrower width */
+      @apply w-[80px] p-2; /* Even narrower width */
     }
+    
   }
 
   @media (max-width: 640px) {
     /* Extra small screens */
     .sidebar {
-      @apply w-[50px]; /* Smallest sidebar width */
+      @apply w-[80px] p-2; /* Smallest sidebar width */
     }
     .sidebar-logo {
       @apply block text-[16px] font-bold text-center; /* Show small logo */
