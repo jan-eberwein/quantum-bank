@@ -51,15 +51,8 @@ const Home = () => {
                   />
                 </div>
 
-                {/* Chart 3: Bubble Chart */}
-                <div className="chart-container">
-                  <DynamicChart type="bubble" title="Portfolio" />
-                </div>
-
-                {/* Chart 4: Scatter Chart */}
-                <div className="chart-container">
-                  <DynamicChart type="scatter" title="" />
-                </div>
+                <br/>
+                
               </div>
             </div>
           </div>

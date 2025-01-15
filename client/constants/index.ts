@@ -513,9 +513,9 @@ export const mockAccounts = [
 // client/constants/index.ts
 
 export const mockCategoriesData = [
-  { category: "Shopping", amount: 350 },
-  { category: "Utilities", amount: 250 },
-  { category: "Entertainment", amount: 150 },
+  { category: "Shopping", amount: 1550 },
+  { category: "Utilities", amount: 1050 },
+  { category: "Entertainment", amount: 850 },
   { category: "Salary", amount: 2000 },
 ];
 
