@@ -23,7 +23,9 @@ const UserCard = () => {
         <p className="text-sm text-gray-500">1234 5678 9012</p>
       </div>
 
+      {/*
       {/* Logout Button - Hidden on screens below 1024px */}
+      {/*
       <div className="logout-button hidden lg:block ml-auto">
         <Link href="/sign-in">
           <Image
@@ -35,6 +37,7 @@ const UserCard = () => {
           />
         </Link>
       </div>
+      */}
     </div>
   );
 };
