@@ -18,14 +18,17 @@ const Transactions = () => {
     const account = mockAccounts[0];
     const rowsPerPage = 14;
 
+    // State for filters
     const [searchQuery, setSearchQuery] = useState(searchParams.get("searchQuery") || "");
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "All Categories");
     const [dateFilter, setDateFilter] = useState<{ from: Date | undefined; to: Date | undefined }>({
         from: undefined,
         to: undefined,
     });
+    const [selectedStatus, setSelectedStatus] = useState(searchParams.get("status") || "All Statuses");
+    const [transactionType, setTransactionType] = useState(searchParams.get("transactionType") || "Incoming & Outgoing");
 
-    // Update query parameters and reset page to 1
+    // Helper function to update query parameters and reset page
     const updateQueryParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set(key, value);
@@ -33,8 +36,17 @@ const Transactions = () => {
         router.push(`?${params.toString()}`);
     };
 
+    // Map status string to boolean
+    const statusFilterMap = {
+        "Completed": false,
+        "Pending": true,
+        "All Statuses": null,
+    };
+
     // Filter transactions based on filters
     const filteredTransactions = account.transactions
+        .filter((t) => transactionType === "Incoming & Outgoing" || (transactionType === "incoming" && t.amount > 0) || (transactionType === "outgoing" && t.amount < 0))
+        .filter((t) => selectedStatus === "All Statuses" || t.pending === statusFilterMap[selectedStatus]) // Ensure t.status exists
         .filter((t) => selectedCategory === "All Categories" || t.category.toLowerCase() === selectedCategory.toLowerCase())
         .filter((t) => t.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter((t) => {
@@ -44,18 +56,17 @@ const Transactions = () => {
             } else if (dateFilter.from) {
                 return transactionDate.toDateString() === dateFilter.from.toDateString();
             }
-            return true; // No date filter
+            return true;
         });
+
 
     // Pagination Logic
     const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
     const indexOfLastTransaction = currentPage * rowsPerPage;
     const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
-    const currentTransactions = filteredTransactions.slice(
-        indexOfFirstTransaction,
-        indexOfLastTransaction
-    );
+    const currentTransactions = filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
 
+    // Expose filtered data and all data to CopilotKit
     useCopilotReadable({
         description: "All transactions of the user's bank account.",
         value: account.transactions,
@@ -65,6 +76,7 @@ const Transactions = () => {
         description: "All transactions of the user's bank account that apply to the currently set filters.",
         value: filteredTransactions,
     });
+
 
     return (
         <div className="transactions">
@@ -105,8 +117,19 @@ const Transactions = () => {
                         setDateFilter(filter);
                         const from = filter.from ? filter.from.toISOString() : "";
                         const to = filter.to ? filter.to.toISOString() : "";
-                        updateQueryParams("dateFilter", `${from}_${to}`);
+                        updateQueryParams("date", `${from}_${to}`);
                     }}
+                    selectedStatus={selectedStatus}
+                    setSelectedStatus={(value) => {
+                        setSelectedStatus(value);
+                        updateQueryParams("status", value);
+                    }}
+                    transactionType={transactionType}
+                    setTransactionType={(value) => {
+                        setTransactionType(value);
+                        updateQueryParams("transactionType", value);
+                    }}
+                    availableStatuses={["All Statuses", "Pending", "Completed"]}
                 />
 
                 <section className="flex w-full flex-col gap-6">
