@@ -219,8 +219,8 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     <SelectItem value="Incoming & Outgoing">
                         Incoming &amp; Outgoing
                     </SelectItem>
-                    <SelectItem value="Incoming">Incoming payments only</SelectItem>
-                    <SelectItem value="Outgoing">Outgoing payments only</SelectItem>
+                    <SelectItem value="incoming">Incoming payments only</SelectItem>
+                    <SelectItem value="outgoing">Outgoing payments only</SelectItem>
                 </SelectContent>
             </Select>
 
