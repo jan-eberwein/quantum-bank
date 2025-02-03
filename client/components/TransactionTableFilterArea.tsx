@@ -32,6 +32,7 @@ interface FilterAreaProps {
     availableStatuses: string[];
     transactionType: string;
     setTransactionType: (value: string) => void;
+    availableTransactionTypes: string[];
 }
 
 const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
@@ -46,6 +47,7 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                                                                    availableStatuses,
                                                                    transactionType,
                                                                    setTransactionType,
+                                                                   availableTransactionTypes,
                                                                }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -53,12 +55,12 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
     const formatDate = (date: Date | undefined) =>
         date ? format(date, "MMM dd, yyyy") : "";
 
-    // Helper function to update query params and reset page
+    // Helper function to update query params using shallow routing
     const updateQueryParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams?.toString());
         params.set(key, value);
         params.set("page", "1");
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, undefined, { shallow: true });
     };
 
     // Copilot readable filters
@@ -141,7 +143,7 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     console.error("Invalid filterType provided");
                 }
                 console.log(`Updated ${filterType}:`, value);
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error updating filters:", error.message);
             }
         },
@@ -209,8 +211,8 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="Incoming & Outgoing">Incoming & Outgoing</SelectItem>
-                    <SelectItem value="incoming">Incoming payments only</SelectItem>
-                    <SelectItem value="outgoing">Outgoing payments only</SelectItem>
+                    <SelectItem value="Incoming">Incoming payments only</SelectItem>
+                    <SelectItem value="Outgoing">Outgoing payments only</SelectItem>
                 </SelectContent>
             </Select>
 
@@ -258,7 +260,7 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                                 to: range?.to ?? undefined,
                             });
                             const from = range?.from ? range.from.toISOString() : "";
-                            const to = range?.to ? range.toISOString() : "";
+                            const to = range?.to ? new Date(range.to).toISOString() : "";
                             updateQueryParams("date", `${from}_${to}`);
                         }}
                         numberOfMonths={1}

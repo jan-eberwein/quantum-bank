@@ -130,6 +130,7 @@ const Transactions = () => {
                         updateQueryParams("transactionType", value);
                     }}
                     availableStatuses={["All Statuses", "Pending", "Completed"]}
+                    availableTransactionTypes={["Incoming & Outgoing", "Incoming payments only", "Outgoing payments only"]}
                 />
 
                 <section className="flex w-full flex-col gap-6">
