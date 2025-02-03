@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { format } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
     Popover,
@@ -17,7 +19,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
-import { parseISO, isValid } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface FilterAreaProps {
@@ -56,7 +57,6 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
         date ? format(date, "MMM dd, yyyy") : "";
 
     // Helper function to update query params and reset page.
-    // This is the original version with only one argument.
     const updateQueryParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams?.toString());
         params.set(key, value);
@@ -78,7 +78,8 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
             {
                 name: "filterType",
                 type: "string",
-                description: "Type of filter to update (e.g., searchQuery, category, date, status, transactionType).",
+                description:
+                    "Type of filter to update (e.g., searchQuery, category, date, status, transactionType).",
                 required: true,
             },
             {
@@ -88,7 +89,13 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                 required: true,
             },
         ],
-        handler: async ({ filterType, value }: { filterType: string; value: string }) => {
+        handler: async ({
+                            filterType,
+                            value,
+                        }: {
+            filterType: string;
+            value: string;
+        }) => {
             try {
                 if (filterType === "searchQuery") {
                     setSearchQuery(value);
@@ -97,12 +104,11 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     setSelectedCategory(value);
                     updateQueryParams("category", value);
                 } else if (filterType === "date") {
-                    // Here we use date-fns to robustly parse ISO dates.
+                    // Parse possible date range or single date
                     let from: Date | null = null;
                     let to: Date | null = null;
-
-                    // Accept either " to " or "_" as the range separator.
                     let separator: string | null = null;
+
                     if (value.includes(" to ")) {
                         separator = " to ";
                     } else if (value.includes("_")) {
@@ -116,8 +122,10 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                         if (!isValid(from) || !isValid(to)) {
                             throw new Error("Invalid date range provided.");
                         }
-                        // Use ISO strings for the URL query.
-                        updateQueryParams("date", `${from.toISOString()}_${to.toISOString()}`);
+                        updateQueryParams(
+                            "date",
+                            `${from.toISOString()}_${to.toISOString()}`
+                        );
                         setDateFilter({ from, to });
                     } else {
                         // Single date input
@@ -129,17 +137,14 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                         setDateFilter({ from, to: undefined });
                     }
                 } else if (filterType === "status") {
-                    console.log(value);
                     setSelectedStatus(value);
                     updateQueryParams("status", value);
                 } else if (filterType === "transactionType") {
-                    console.log(value);
                     setTransactionType(value);
                     updateQueryParams("transactionType", value);
                 } else {
                     console.error("Invalid filterType provided");
                 }
-                console.log(`Updated ${filterType}:`, value);
             } catch (error: any) {
                 console.error("Error updating filters:", error.message);
             }
@@ -157,7 +162,7 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     setSearchQuery(e.target.value);
                     updateQueryParams("searchQuery", e.target.value);
                 }}
-                className="px-4 py-2 border rounded-lg"
+                className="px-4 py-2 bg-white text-black border border-gray-300 rounded-lg"
             />
 
             {/* Category Dropdown */}
@@ -167,10 +172,12 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     updateQueryParams("category", value);
                 }}
             >
-                <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder={selectedCategory || "Select Category"} />
+                <SelectTrigger className="w-[250px] bg-white text-black border border-gray-300 rounded-lg">
+                    <SelectValue
+                        placeholder={selectedCategory || "Select Category"}
+                    />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white text-black border border-gray-300 rounded-lg">
                     {[
                         "All Categories",
                         "Food & Beverages",
@@ -203,13 +210,17 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     updateQueryParams("transactionType", value);
                 }}
             >
-                <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder={transactionType || "Select Transaction Type"} />
+                <SelectTrigger className="w-[250px] bg-white text-black border border-gray-300 rounded-lg">
+                    <SelectValue
+                        placeholder={transactionType || "Select Transaction Type"}
+                    />
                 </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="Incoming & Outgoing">Incoming & Outgoing</SelectItem>
-                    <SelectItem value="Incoming payments only">Incoming payments only</SelectItem>
-                    <SelectItem value="Outgoing payments only">Outgoing payments only</SelectItem>
+                <SelectContent className="bg-white text-black border border-gray-300 rounded-lg">
+                    <SelectItem value="Incoming & Outgoing">
+                        Incoming &amp; Outgoing
+                    </SelectItem>
+                    <SelectItem value="Incoming">Incoming payments only</SelectItem>
+                    <SelectItem value="Outgoing">Outgoing payments only</SelectItem>
                 </SelectContent>
             </Select>
 
@@ -220,10 +231,10 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     updateQueryParams("status", value);
                 }}
             >
-                <SelectTrigger className="w-[250px]">
+                <SelectTrigger className="w-[250px] bg-white text-black border border-gray-300 rounded-lg">
                     <SelectValue placeholder={selectedStatus || "Select Status"} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white text-black border border-gray-300 rounded-lg">
                     {availableStatuses.map((status) => (
                         <SelectItem key={status} value={status}>
                             {status}
@@ -235,7 +246,12 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
             {/* Date Range Picker */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("w-[250px] justify-start")}>
+                    <Button
+                        variant="outline"
+                        className={cn(
+                            "w-[250px] justify-start bg-white text-black border border-gray-300 rounded-lg"
+                        )}
+                    >
                         {dateFilter?.from && dateFilter?.to
                             ? `${formatDate(dateFilter.from)} - ${formatDate(dateFilter.to)}`
                             : dateFilter?.from
@@ -244,7 +260,10 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className={cn("popover-content w-auto p-0 bg-white")} align="start">
+                <PopoverContent
+                    className={cn("w-auto p-0 bg-white border border-gray-300 rounded-lg")}
+                    align="start"
+                >
                     <Calendar
                         mode="range"
                         selected={{
@@ -252,18 +271,20 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                             to: dateFilter.to,
                         }}
                         onSelect={(range) => {
+                            const from = range?.from ? range.from.toISOString() : "";
+                            const to = range?.to ? new Date(range.to).toISOString() : "";
                             setDateFilter({
                                 from: range?.from ?? undefined,
                                 to: range?.to ?? undefined,
                             });
-                            const from = range?.from ? range.from.toISOString() : "";
-                            const to = range?.to ? new Date(range.to).toISOString() : "";
                             updateQueryParams("date", `${from}_${to}`);
                         }}
                         numberOfMonths={1}
                         initialFocus
                         defaultMonth={dateFilter?.from}
-                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                        disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                        }
                     />
                 </PopoverContent>
             </Popover>

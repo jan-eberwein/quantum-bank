@@ -408,7 +408,7 @@
     .sidebar {
       @apply w-[80px] p-2; /* Even narrower width */
     }
-    
+
   }
 
   @media (max-width: 640px) {
@@ -529,50 +529,35 @@
   height: 8px;
 }
 
-.rdp-day--selected {
-  background-color: #4caf50;
-  color: white;
-  border-radius: 50%;
+
+select {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  appearance: none; /* hide default arrow styling for consistency */
 }
 
-[aria-selected="true"] {
-  background-color: #4caf50;
-  color: red;
-  border-radius: 10%;
-}
-
-.day-range-start {
-  background-color: #4caf50;
-  color: white;
-  border-radius: 10%;
-}
-
+.rdp-day--selected,
+[aria-selected="true"],
+.day-range-start,
+.day-range-middle,
 .day-range-end {
-  background-color: #4caf50;
-  color: white;
-  border-radius: 10%;
-}
-
-.day-range-middle {
-  background-color: #4caf50 !important;
-  color: brown !important;
-  border-radius: 50%;
+  background-color: #007bff !important; /* your brand blue */
+  color: #fff !important;
+  border-radius: 4px !important;
 }
 
 .rdp-day:hover {
-  background-color: #e8f5e9 !important;
-  color: black !important;
-  border-radius: 50%;
+  background-color: #e8f0fe !important;
+  color: #000 !important;
+  border-radius: 4px !important;
 }
 
 [aria-selected="true"]:hover {
-  background-color: #43a047 !important;
-  color: blue !important;
-}
-
-[aria-selected="true"].rdp-day--range {
-  background-color: red !important;
-  color: black !important;
+  background-color: #0056b3 !important;
+  color: #fff !important;
 }
 
 @layer base {
