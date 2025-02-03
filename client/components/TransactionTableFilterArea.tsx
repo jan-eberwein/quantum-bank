@@ -18,6 +18,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import { parseISO, isValid } from "date-fns";
 
 interface FilterAreaProps {
     searchQuery: string;
@@ -87,7 +88,8 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
             {
                 name: "filterType",
                 type: "string",
-                description: "The type of filter to update (searchQuery, category, or date)",
+                description:
+                    "The type of filter to update (searchQuery, category, or date)",
                 required: true,
             },
             {
@@ -106,47 +108,42 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     setSelectedCategory(value);
                     updateQueryParams("category", value);
                 } else if (filterType === "date") {
-                    // Handle the date input
+                    // Here we use date-fns to robustly parse ISO dates.
                     let from: Date | null = null;
                     let to: Date | null = null;
 
-                    console.log(value);
-                    // Check if the input contains a range (e.g., "2024-07-01 to 2024-07-02")
+                    // Accept either " to " or "_" as the range separator.
+                    let separator: string | null = null;
                     if (value.includes(" to ")) {
-                        const [fromRaw, toRaw] = value.split(" to ");
-                        from = new Date(fromRaw.trim());
-                        to = new Date(toRaw.trim());
+                        separator = " to ";
+                    } else if (value.includes("_")) {
+                        separator = "_";
+                    }
 
-                        // Validate the dates
-                        if (isNaN(from.getTime()) || isNaN(to.getTime())) {
+                    if (separator) {
+                        const [fromRaw, toRaw] = value.split(separator);
+                        from = parseISO(fromRaw.trim());
+                        to = parseISO(toRaw.trim());
+                        if (!isValid(from) || !isValid(to)) {
                             throw new Error("Invalid date range provided.");
                         }
-
-                        // Format dates for query params
-                        const formattedFrom = from.toISOString();
-                        const formattedTo = to.toISOString();
-                        updateQueryParams("date", `${formattedFrom}_${formattedTo}`);
+                        // Use ISO strings for the URL query.
+                        updateQueryParams("date", `${from.toISOString()}_${to.toISOString()}`);
                         setDateFilter({ from, to });
                     } else {
-                        // Single date input (e.g., "2024-07-01")
-                        from = new Date(value.trim());
-
-                        // Validate the date
-                        if (isNaN(from.getTime())) {
+                        // Single date input
+                        from = parseISO(value.trim());
+                        if (!isValid(from)) {
                             throw new Error("Invalid single date provided.");
                         }
-
-                        // Format the single date for query params
-                        const formattedFrom = from.toISOString();
-                        updateQueryParams("date", formattedFrom);
+                        updateQueryParams("date", from.toISOString());
                         setDateFilter({ from, to: undefined });
                     }
+                    console.log("Updated date filter:", value);
                 } else {
                     console.error("Invalid filterType provided");
                 }
-
-                console.log(`Updated ${filterType}:`, value);
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error updating filters:", error.message);
             }
         },
