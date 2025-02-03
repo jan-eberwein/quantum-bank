@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
     Select,
     SelectContent,
@@ -18,6 +17,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface FilterAreaProps {
     searchQuery: string;
@@ -26,6 +26,11 @@ interface FilterAreaProps {
     setSelectedCategory: (value: string) => void;
     dateFilter: { from: Date | undefined; to: Date | undefined };
     setDateFilter: (filter: { from: Date | undefined; to: Date | undefined }) => void;
+    selectedStatus: string;
+    setSelectedStatus: (value: string) => void;
+    availableStatuses: string[];
+    transactionType: string;
+    setTransactionType: (value: string) => void;
 }
 
 const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
@@ -35,6 +40,11 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                                                                    setSelectedCategory,
                                                                    dateFilter,
                                                                    setDateFilter,
+                                                                   selectedStatus,
+                                                                   setSelectedStatus,
+                                                                   availableStatuses,
+                                                                   transactionType,
+                                                                   setTransactionType,
                                                                }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -42,112 +52,59 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
     const formatDate = (date: Date | undefined) =>
         date ? format(date, "MMM dd, yyyy") : "";
 
-    // Helper function to reset filters and navigate to page 1
+    // Helper function to update query params and reset page
     const updateQueryParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams?.toString());
         params.set(key, value);
-        params.set("page", "1"); // Always reset to page 1
+        params.set("page", "1");
         router.push(`?${params.toString()}`);
     };
 
-    const categories = [
-        "All Categories",
-        "Food & Beverages",
-        "Shopping",
-        "Travel",
-        "Entertainment",
-        "Housing",
-        "Friends & Family",
-        "Health & Fitness",
-        "Transportation",
-        "Utilities",
-        "Education",
-        "Personal Care",
-        "Insurance",
-        "Savings",
-        "Gifts",
-        "Others",
-    ];
-
-    // Make filters readable by Copilot
+    // Copilot readable filters
     useCopilotReadable({
-        description: "All available filter options for the user's transaction list",
-        value: {
-            searchQuery,
-            selectedCategory,
-            dateFilter,
-        },
+        description: "All active filters for the transaction table.",
+        value: { searchQuery, selectedCategory, dateFilter, selectedStatus, transactionType },
     });
 
-    // Define Copilot action for filters
+    // Copilot action to update filters
     useCopilotAction({
         name: "updateFilters",
-        description: "Update the active filters for the transaction list",
+        description: "Update filters for the transaction table.",
         parameters: [
             {
                 name: "filterType",
                 type: "string",
-                description: "The type of filter to update (searchQuery, category, or date)",
+                description: "Type of filter to update (e.g., searchQuery, category, date, status, transactionType).",
                 required: true,
             },
             {
                 name: "value",
                 type: "string",
-                description: "The new value for the filter",
+                description: "New value for the specified filter.",
                 required: true,
             },
         ],
         handler: async ({ filterType, value }: { filterType: string; value: string }) => {
-            try {
-                if (filterType === "searchQuery") {
-                    setSearchQuery(value);
-                    updateQueryParams("searchQuery", value);
-                } else if (filterType === "category") {
-                    setSelectedCategory(value);
-                    updateQueryParams("category", value);
-                } else if (filterType === "date") {
-                    // Handle the date input
-                    let from: Date | null = null;
-                    let to: Date | null = null;
-
-                    console.log(value);
-                    // Check if the input contains a range (e.g., "2024-07-01 to 2024-07-02")
-                    if (value.includes(" to ")) {
-                        const [fromRaw, toRaw] = value.split(" to ");
-                        from = new Date(fromRaw.trim());
-                        to = new Date(toRaw.trim());
-
-                        // Validate the dates
-                        if (isNaN(from.getTime()) || isNaN(to.getTime())) {
-                            throw new Error("Invalid date range provided.");
-                        }
-
-                        // Format dates for query params
-                        const formattedFrom = from.toISOString();
-                        const formattedTo = to.toISOString();
-                        updateQueryParams("date", `${formattedFrom}_${formattedTo}`);
-                        setDateFilter({ from, to });
-                    } else {
-                        // Single date input (e.g., "2024-07-01")
-                        from = new Date(value.trim());
-
-                        // Validate the date
-                        if (isNaN(from.getTime())) {
-                            throw new Error("Invalid single date provided.");
-                        }
-
-                        // Format the single date for query params
-                        const formattedFrom = from.toISOString();
-                        updateQueryParams("date", formattedFrom);
-                        setDateFilter({ from, to: undefined });
-                    }
-                } else {
-                    console.error("Invalid filterType provided");
-                }
-
-                console.log(`Updated ${filterType}:`, value);
-            } catch (error) {
-                console.error("Error updating filters:", error.message);
+            if (filterType === "searchQuery") {
+                setSearchQuery(value);
+                updateQueryParams("searchQuery", value);
+            } else if (filterType === "category") {
+                setSelectedCategory(value);
+                updateQueryParams("category", value);
+            } else if (filterType === "date") {
+                const [from, to] = value.split("_");
+                const parsedFrom = from ? new Date(from) : undefined;
+                const parsedTo = to ? new Date(to) : undefined;
+                setDateFilter({ from: parsedFrom, to: parsedTo });
+                updateQueryParams("date", value);
+            } else if (filterType === "status") {
+                console.log(value);
+                setSelectedStatus(value);
+                updateQueryParams("status", value);
+            } else if (filterType === "transactionType") {
+                console.log(value);
+                setTransactionType(value);
+                updateQueryParams("transactionType", value);
             }
         },
     });
@@ -168,7 +125,6 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
 
             {/* Category Dropdown */}
             <Select
-                className="w-2/3 space-y-6"
                 onValueChange={(value) => {
                     setSelectedCategory(value);
                     updateQueryParams("category", value);
@@ -178,9 +134,62 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
                     <SelectValue placeholder={selectedCategory || "Select Category"} />
                 </SelectTrigger>
                 <SelectContent>
-                    {categories.map((category) => (
+                    {[
+                        "All Categories",
+                        "Food & Beverages",
+                        "Shopping",
+                        "Travel",
+                        "Entertainment",
+                        "Housing",
+                        "Friends & Family",
+                        "Health & Fitness",
+                        "Transportation",
+                        "Utilities",
+                        "Education",
+                        "Personal Care",
+                        "Insurance",
+                        "Savings",
+                        "Gifts",
+                        "Others",
+                    ].map((category) => (
                         <SelectItem key={category} value={category}>
                             {category}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+            {/* Transaction Type Dropdown */}
+            <Select
+                onValueChange={(value) => {
+                    setTransactionType(value);
+                    updateQueryParams("transactionType", value);
+                }}
+            >
+                <SelectTrigger className="w-[250px]">
+                    <SelectValue placeholder={transactionType || "Select Transaction Type"} />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="Incoming & Outgoing">Incoming & Outgoing</SelectItem>
+                    <SelectItem value="incoming">Incoming payments only</SelectItem>
+                    <SelectItem value="outgoing">Outgoing payments only</SelectItem>
+                </SelectContent>
+            </Select>
+
+            {/* Status Dropdown */}
+            <Select
+                onValueChange={(value) => {
+                    setSelectedStatus(value);
+                    updateQueryParams("status", value);
+                }}
+            >
+                <SelectTrigger className="w-[250px]">
+                    <SelectValue placeholder={selectedStatus || "Select Status"} />
+                </SelectTrigger>
+                <SelectContent>
+                    {availableStatuses.map((status) => (
+                        <SelectItem key={status} value={status}>
+                            {status}
                         </SelectItem>
                     ))}
                 </SelectContent>
@@ -189,49 +198,36 @@ const TransactionTableFilterArea: React.FC<FilterAreaProps> = ({
             {/* Date Range Picker */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        className={cn("w-[250px] justify-start")}
-                    >
+                    <Button variant="outline" className={cn("w-[250px] justify-start")}>
                         {dateFilter?.from && dateFilter?.to
                             ? `${formatDate(dateFilter.from)} - ${formatDate(dateFilter.to)}`
                             : dateFilter?.from
                                 ? formatDate(dateFilter.from)
-                                : <span>Select Date</span>}
+                                : "Select Date"}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent
-                    className={cn("popover-content w-auto p-0 bg-white")}
-                    align="start"
-                >
-                    <div className="rounded-md border-none shadow-none">
-                        <Calendar
-                            mode="range"
-                            selected={{
-                                from: dateFilter.from,
-                                to: dateFilter.to,
-                            }}
-                            onSelect={(range) => {
-                                setDateFilter({
-                                    from: range?.from ?? undefined,
-                                    to: range?.to ?? undefined,
-                                });
-                                updateQueryParams(
-                                    "date",
-                                    range?.from && range?.to
-                                        ? `${range.from.toISOString()}_${range.to.toISOString()}`
-                                        : ""
-                                );
-                            }}
-                            numberOfMonths={1}
-                            initialFocus
-                            defaultMonth={dateFilter?.from}
-                            disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                            }
-                        />
-                    </div>
+                <PopoverContent className={cn("popover-content w-auto p-0 bg-white")} align="start">
+                    <Calendar
+                        mode="range"
+                        selected={{
+                            from: dateFilter.from,
+                            to: dateFilter.to,
+                        }}
+                        onSelect={(range) => {
+                            setDateFilter({
+                                from: range?.from ?? undefined,
+                                to: range?.to ?? undefined,
+                            });
+                            const from = range?.from ? range.from.toISOString() : "";
+                            const to = range?.to ? range.toISOString() : "";
+                            updateQueryParams("date", `${from}_${to}`);
+                        }}
+                        numberOfMonths={1}
+                        initialFocus
+                        defaultMonth={dateFilter?.from}
+                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                    />
                 </PopoverContent>
             </Popover>
         </div>
